@@ -1,0 +1,48 @@
+# Build image
+FROM python:3.10-slim
+
+ARG USER
+ARG GIT_USER
+ARG GIT_EMAIL
+
+RUN apt update \
+    && apt upgrade -y \
+    && apt install build-essential -y \
+    && apt install curl -y \
+    && apt install gcc -y \
+    && apt install git -y \
+    && pip install --upgrade pip
+
+# set poetry version
+ENV POETRY_VERSION=1.7.1 \
+    # Do not ask any interactive question
+    POETRY_NO_INTERACTION=1
+
+RUN curl -sSL https://install.python-poetry.org | python -
+
+ENV PATH="/root/.local/bin:$PATH"
+ENV PYTHONWARNINGS="ignore:Unverified HTTPS request"
+ENV USER=$USER
+
+WORKDIR "/root/$USER/synth-data-gen-from-text"
+
+# Install dependencies before code so that they are cached
+COPY pyproject.toml ./
+
+# Install poetry and prepare venv
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi
+
+COPY . .
+
+# Now that we have the code, install entrypoints
+RUN poetry install --no-interaction --no-ansi
+
+RUN poetry run python -m ipykernel install --user --name synth-data-gen-from-text
+
+# Set git config
+RUN git config --global --add safe.directory "/root/$USER/synth-data-gen-from-text"
+RUN git config --global user.email "$GIT_EMAIL"
+RUN git config --global user.name "$GIT_USER"
+
+CMD ["/bin/bash"]
