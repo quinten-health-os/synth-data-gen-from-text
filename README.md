@@ -8,7 +8,9 @@ This approach, which is easy to use and does not require original data or advanc
 
 The project was developed using data from the Parkinson’s Progression Markers Initiative (PPMI)(RRID:SCR 006431) and Alzheimer's Disease Neuroimaging Initiative(ADNI) database. For up-to-date information on the studies, visit www.ppmi-info.org and https://adni.loni.usc.edu.
 
-For more information on the developped framework, see our paper [here].
+For more information on the developped framework, see our paper [here](https://arxiv.org/abs/2412.05153).
+
+Supplementary material is available [here](Supplementary_material_A_text_to_tabular_approach_to_generate_synthetic_patienta_dat_using_LLMs.pdf).
 
 ## Installation
 
